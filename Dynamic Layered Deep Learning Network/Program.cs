@@ -68,6 +68,8 @@ namespace DynamicLayeredDeepLearningNetwork
         {
 
             int layerSize;
+            int inputLayerSize;
+            int outputLayerSize;
             int networkSizeCounter = 0; //Counts Network Size for display
             int connectionSizeCounter = 0; //Calculates Connection Size for Display
             int[] layerAndNodeAmountHolder;
@@ -77,6 +79,13 @@ namespace DynamicLayeredDeepLearningNetwork
 
             EMNistDecoder emnistDecoder = new EMNistDecoder();
             emnistDecoder.EMNistDecoderInit();
+
+            inputLayerSize = emnistDecoder.dimensions;
+            Console.WriteLine("Please enter classification output parameter");
+            outputLayerSize = Convert.ToInt32(Console.ReadLine());
+
+
+           
 
             Output outputArray = new Output(emnistDecoder);
 
@@ -89,7 +98,7 @@ namespace DynamicLayeredDeepLearningNetwork
 
             Random rand = new Random();
 
-            Console.WriteLine("Please Enter Layer Amount");
+            Console.WriteLine("Please Enter Hidden Layer Amount");
             Variables.LayerAmount = Convert.ToInt32(Console.ReadLine());
             layerAndNodeAmountHolder = new int[Variables.LayerAmount];
 
@@ -98,36 +107,40 @@ namespace DynamicLayeredDeepLearningNetwork
                 return;
             }
 
-            Console.WriteLine("Please enter Input Layer Size");
-            layerSize = Convert.ToInt32(Console.ReadLine());
-            layerAndNodeAmountHolder[0] = layerSize;
-            Variables.InputSize = layerSize;
-            Input inputArray;
+            //Console.WriteLine("Please enter Input Layer Size");
+            //layerSize = Convert.ToInt32(Console.ReadLine());
+
+            //layerAndNodeAmountHolder[0] = layerSize;
+
+            Variables.InputSize = inputLayerSize;
+            Input inputArray = new Input(emnistDecoder);
 
 
-            for (int i = 1; i < layerAndNodeAmountHolder.Length - 1; i++)
+            for (int i = 0; i < layerAndNodeAmountHolder.Length; i++)
             {
-                Console.WriteLine("Please enter " + i + "th Hidden Layer Size");
+                Console.WriteLine("Please enter " + (i + 1) + "th Hidden Layer Size");
                 layerSize = Convert.ToInt32(Console.ReadLine());
                 layerAndNodeAmountHolder[i] = layerSize;
 
             }
 
-            Console.WriteLine("Please enter Output Layer Size");
-            layerSize = Convert.ToInt32(Console.ReadLine());
-            layerAndNodeAmountHolder[Variables.LayerAmount - 1] = layerSize;
+            //Console.WriteLine("Please enter Output Layer Size");
+            //layerSize = Convert.ToInt32(Console.ReadLine());
+           // layerSize = emnistDecoder.labels.Length;
+            //layerAndNodeAmountHolder[Variables.LayerAmount - 1] = layerSize;
 
+            
             stopwatch.Start();
 
-            network.addLayerToNetwork(layerAndNodeAmountHolder[0], 0);
+            network.addLayerToNetwork(inputLayerSize, 0);
 
-            for (int i = 1; i < layerAndNodeAmountHolder.Length - 1; i++)
+            for (int i = 0; i < layerAndNodeAmountHolder.Length ; i++)
             {
                 network.addLayerToNetwork(layerAndNodeAmountHolder[i], 1);
 
             }
 
-            network.addLayerToNetwork(layerAndNodeAmountHolder[Variables.LayerAmount - 1], 2);
+            network.addLayerToNetwork(outputLayerSize, 2);
 
 
 

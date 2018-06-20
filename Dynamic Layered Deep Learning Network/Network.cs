@@ -18,6 +18,8 @@ namespace DynamicLayeredDeepLearningNetwork
         {
             Layers = new List<Layer>();
             networkSize = 0;
+            bestNeuronIndex = 0;
+            maxOutput = 0;
             Console.WriteLine("Network Created");
         }
 
@@ -54,7 +56,7 @@ namespace DynamicLayeredDeepLearningNetwork
         {
             for (int i = 0; i < 10; i++)
             {
-                errorArray[i] = _outputArray.expectedOutputArray[i] - Layers[Layers.Count].Neurons[i].output;
+                errorArray[i] = Layers[Layers.Count].Neurons[i].output - _outputArray.expectedOutputArray[i];
             }
         }
 
