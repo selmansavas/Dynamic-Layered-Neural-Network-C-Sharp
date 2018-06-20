@@ -67,22 +67,22 @@ namespace DynamicLayeredDeepLearningNetwork
             {
                 case 0:
                     {
-                        output = output / input.Length;
+                        output =(bias + output) / input.Length;
                         break;
                     }
                 case 1:
                     {
-                        output = 1 / (1 + (Math.Exp(output)));
+                        output = 1 / (1 + (Math.Exp(bias + output)));
                         break;
                     }
                 case 2:
                     {
-                        output = Math.Tanh(output);
+                        output = Math.Tanh(bias + output);
                         break;
                     }
                 case 3:
                     {
-                        output = Math.Max(0.01f, output);
+                        output = Math.Max(0.01f, bias + output);
                         break;
                     }
 
