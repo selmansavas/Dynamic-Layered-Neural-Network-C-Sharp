@@ -14,6 +14,9 @@ namespace DynamicLayeredDeepLearningNetwork
         {
             networkOutputArray = new double[_emnistDecoder.numLabels];
             expectedOutputArray = new double[_emnistDecoder.numLabels];
+
+            resetExpectedOutputArray();
+            resetNetworkOutputArray();
         }
 
         public void setNetworkOutputArray(Network _network)
@@ -26,6 +29,7 @@ namespace DynamicLayeredDeepLearningNetwork
             for (int i = 0; i < networkOutputArray.Length; i++)
             {
                 networkOutputArray[i] = 0;
+                expectedOutputArray[i] = 0;
             }
         }
 

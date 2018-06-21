@@ -6,80 +6,86 @@ namespace DynamicLayeredDeepLearningNetwork
 {
     class Layer
     {
-    public Node[] Neurons;
-    public int layerSize;
-    public int layerType; // 0 = Input Layer, 1 = Hidden Layer, 2 = Output Layer
-    public int layerActivationType; // 0 = Linear, 1 = Sigmoid, 2 = TanH
-    public int layerIndex; // To track where we are in Network Structure
+        public Node[] Neurons;
+        public int layerSize;
+        public int layerType; // 0 = Input Layer, 1 = Hidden Layer, 2 = Output Layer
+        public int layerActivationType; // 0 = Linear, 1 = Sigmoid, 2 = TanH
+        public int layerIndex; // To track where we are in Network Structure
 
-    public Layer(int _layerType, int _layerIndex, int _layerSize, Network network, Random rand)
-    {
-        try
+       
+        public double errorTemp;
+
+        public double[] errorDelta;
+
+        public Layer(int _layerType, int _layerIndex, int _layerSize, Network network, Random rand)
         {
-            Console.WriteLine("Layer Created");
-            layerType = _layerType;
-            layerIndex = _layerIndex;
-            layerSize = _layerSize;
+            try
+            {
+                Console.WriteLine("Layer Created");
+                layerType = _layerType;
+                layerIndex = _layerIndex;
+                layerSize = _layerSize;
 
+                if (layerType == 0)
+                {
+                    Neurons = new Node[layerSize];
+
+                    for (int i = 0; i < layerSize; i++)
+                    {
+                        Neurons[i] = new Node();
+                    }
+                }
+                else if (layerType == 1 || layerType == 2)
+                {
+                    Neurons = new Node[layerSize];
+
+                    for (int i = 0; i < layerSize; i++)
+                    {
+                        Neurons[i] = new Node(network.Layers[layerIndex - 1], RandomGenerator.getRandomizer(), 0);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+
+        }
+
+        public void setInputLayerInputs(double[] _inputArray)
+        {
             if (layerType == 0)
             {
-                Neurons = new Node[layerSize];
-
                 for (int i = 0; i < layerSize; i++)
                 {
-                    Neurons[i] = new Node();
+                    Neurons[i].input[0] = _inputArray[i];
+                    Neurons[i].output = _inputArray[i];
                 }
             }
-            else if (layerType == 1 || layerType == 2)
-            {
-                Neurons = new Node[layerSize];
+        }
 
+        public void setLayerInputs(Network _network)
+        {
+            if (layerType != 0)
+            {
                 for (int i = 0; i < layerSize; i++)
                 {
-                    Neurons[i] = new Node(network.Layers[layerIndex - 1], RandomGenerator.getRandomizer(), 0);
+                    for (int x = 0; x < _network.Layers[layerIndex - 1].layerSize; x++)
+                    {
+                        Neurons[i].input[x] = _network.Layers[layerIndex - 1].Neurons[x].output;
+                    }
                 }
             }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
+
         }
 
-
-    }
-
-    public void setInputLayerInputs(double[] _inputArray)
-    {
-        if (layerType == 0)
+        public void calculateLayerOutputs()
         {
-            for (int i = 0; i < layerSize; i++)
+            foreach (Node n in Neurons)
             {
-                Neurons[i].input[0] = _inputArray[i];
+                n.calculateNodeOutput();
             }
         }
     }
-
-    public void setLayerInputs(Network _network)
-    {
-        if (layerType != 0)
-        {
-            for (int i = 0; i < layerSize; i++)
-            {
-                for (int x = 0; x < _network.Layers[layerIndex - 1].layerSize; x++)
-                {
-                    Neurons[i].input[x] = _network.Layers[layerIndex - 1].Neurons[x].output;
-                }
-            }
-        }
-
-    }
-
-    public void calculateLayerOutputs()
-    {
-        foreach (Node n in Neurons)
-        {
-            n.calculateNodeOutput();
-        }
-    }
-}
 }

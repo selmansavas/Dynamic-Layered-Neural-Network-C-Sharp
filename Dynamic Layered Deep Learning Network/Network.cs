@@ -11,6 +11,7 @@ namespace DynamicLayeredDeepLearningNetwork
         public int networkSize;
         public int bestNeuronIndex;
 
+        public double globalError;
         public double maxOutput;
         public double[] errorArray;
 
@@ -54,7 +55,7 @@ namespace DynamicLayeredDeepLearningNetwork
 
         public void calculateOutputError(EMNistDecoder eMNistDecoder, Output _outputArray)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Program.Variables.OutputSize; i++)
             {
                 errorArray[i] = Layers[Layers.Count].Neurons[i].output - _outputArray.expectedOutputArray[i];
             }

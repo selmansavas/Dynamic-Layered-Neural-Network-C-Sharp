@@ -84,9 +84,7 @@ namespace DynamicLayeredDeepLearningNetwork
             Console.WriteLine("Please enter classification output parameter");
             outputLayerSize = Convert.ToInt32(Console.ReadLine());
 
-
-           
-
+            Variables.OutputSize = outputLayerSize;
             Output outputArray = new Output(emnistDecoder);
 
 
