@@ -11,6 +11,9 @@ namespace DynamicLayeredDeepLearningNetwork
         public double bias;
         public double output;
         public double error;
+        public double delta;
+        public double derivativeStorage;
+        public double[] weightDelta;
         public double[] input;
         public double[] weight;
 
@@ -67,31 +70,31 @@ namespace DynamicLayeredDeepLearningNetwork
             {
                 case 0:
                     {
-                        output =(bias + output) / input.Length;
+                        output = (bias + output) / input.Length;
                         break;
                     }
                 case 1:
                     {
                         output = 1 / (1 + (Math.Exp(bias + output)));
+                        derivativeStorage = output * (1 - output);
                         break;
                     }
                 case 2:
                     {
                         output = Math.Tanh(bias + output);
+                        derivativeStorage = 1 - (output * output);
                         break;
                     }
                 case 3:
                     {
                         output = Math.Max(0.01f, bias + output);
+                        derivativeStorage = output > 0.01f ? 1 : 0;
                         break;
                     }
-
-
             }
-
-
-
         }
+
+       
 
     }
 }

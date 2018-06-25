@@ -57,8 +57,15 @@ namespace DynamicLayeredDeepLearningNetwork
         {
             for (int i = 0; i < Program.Variables.OutputSize; i++)
             {
-                errorArray[i] = Layers[Layers.Count].Neurons[i].output - _outputArray.expectedOutputArray[i];
+                Layers[Layers.Count].Neurons[i].error = Layers[Layers.Count].Neurons[i].output - _outputArray.expectedOutputArray[i];
+                //Output nodes gradient delta is calculated at calculateNodeOutput
+                Layers[Layers.Count].Neurons[i].delta = Layers[Layers.Count].Neurons[i].derivativeStorage * Layers[Layers.Count].Neurons[i].error;
             }
+        }
+
+        public void startBackPropogation()
+        {
+
         }
 
         public int getPrediction()
