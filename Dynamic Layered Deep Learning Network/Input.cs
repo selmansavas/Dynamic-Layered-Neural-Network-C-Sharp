@@ -21,6 +21,7 @@ namespace DynamicLayeredDeepLearningNetwork
                 for (int j = 0; j < _emnistDecoder.numCols; j++)
                 {
                     inputArray[k] = _emnistDecoder.images[imageNumber, i, j];
+                    k++;
                 }
             }
         }

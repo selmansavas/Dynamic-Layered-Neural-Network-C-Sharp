@@ -2,7 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+using System.Threading;
 static class BinaryReaderExtension
 {
     public static int ReadInt32Endian(this BinaryReader br)
@@ -46,8 +46,9 @@ namespace DynamicLayeredDeepLearningNetwork
             public static int OutputSize;
             public static int TrainingSize;
             public static int TestSize;
-            public static int LearningRate;
             public static int LayerAmount;
+
+            public static double LearningRate;
 
             public static string TrainingFilePath;
             public static string TestFilePath;
@@ -72,20 +73,61 @@ namespace DynamicLayeredDeepLearningNetwork
             int outputLayerSize;
             int networkSizeCounter = 0; //Counts Network Size for display
             int connectionSizeCounter = 0; //Calculates Connection Size for Display
+            int imageAndLabelCounter = 0;
+            int imageCount;
+            int succesfulPredictions = 0;
+            int unsuccesfulPredictions = 0;
             int[] layerAndNodeAmountHolder;
-           
 
+            string labelFilePath;
+            string imagesFilePath;
 
+            labelFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-mnist-train-labels-idx1-ubyte\emnist-mnist-train-labels-idx1-ubyte";
+            imagesFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-mnist-train-images-idx3-ubyte\emnist-mnist-train-images-idx3-ubyte";
+
+        /*
+            Console.WriteLine("Please enter labelFilePath");
+            while(true)
+            {
+                labelFilePath = Console.ReadLine();
+                if(File.Exists(labelFilePath))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Entered wrong file location. Please enter labelFilePath");
+                }
+            }
+
+            Console.WriteLine("Please enter imagesFilePath");
+
+            while (true)
+            {
+                imagesFilePath = Console.ReadLine();
+                if (File.Exists(imagesFilePath))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Entered wrong file location. Please enter imagesFilePath");
+                }
+            }
+            */
 
             EMNistDecoder emnistDecoder = new EMNistDecoder();
-            emnistDecoder.EMNistDecoderInit();
+            emnistDecoder.EMNistDecoderInit(labelFilePath,imagesFilePath);
+
+            imageCount = emnistDecoder.numImages;
 
             inputLayerSize = emnistDecoder.dimensions;
             Console.WriteLine("Please enter classification output parameter");
             outputLayerSize = Convert.ToInt32(Console.ReadLine());
 
             Variables.OutputSize = outputLayerSize;
-            Output outputArray = new Output(emnistDecoder);
+            Variables.LearningRate = 0.5f;
+            Output outputArray = new Output(Variables.OutputSize);
 
 
             Stopwatch stopwatch = new Stopwatch();
@@ -166,27 +208,36 @@ namespace DynamicLayeredDeepLearningNetwork
 
 
             Console.Read();
+            Console.Clear();
 
-
-
-            for (int i = 0; i < emnistDecoder.numImages; i++)
+            while(imageAndLabelCounter < imageCount)
             {
-                for (int j = 0; j < emnistDecoder.numRows; j++)
+                emnistDecoder.emnistDecoderPrint(imageAndLabelCounter);
+                inputArray.setInput(emnistDecoder,imageAndLabelCounter);
+                outputArray.setExpectedOutputArray(emnistDecoder, emnistDecoder.getCurrentImageLabel(imageAndLabelCounter));
+                network.setInputLayerInputs(inputArray);
+                network.feedForward();
+                Console.WriteLine("Network prediction was : " + network.getPrediction());
+                
+                if(network.getPrediction() == emnistDecoder.getCurrentImageLabel(imageAndLabelCounter))
                 {
-                    for (int k = 0; k < emnistDecoder.numCols; k++)
-                    {
-                        if (emnistDecoder.images[i, j, k] == 0)
-                            Console.Write("."); // white
-                        else if (emnistDecoder.images[i, j, k] == 255)
-                            Console.Write("O"); // black
-                        else
-                            Console.Write("X"); // gray
-
-                    }
-                    Console.WriteLine();
+                    succesfulPredictions++;                  
                 }
-                Console.WriteLine("Image Label is " + emnistDecoder.labels[i]);
+                else
+                {
+                    unsuccesfulPredictions++;
+                    network.calculateOutputError(emnistDecoder, outputArray);
+                    network.startBackPropogation();
+                    network.updateWeightsAndBiases();
+                }
+                Console.WriteLine("Success Rate is : %" + ((succesfulPredictions / (imageAndLabelCounter + 1)) * 100));              
+                imageAndLabelCounter++;
+                network.outputDebugPrint();
+                outputArray.resetExpectedOutputArray();
+                Console.SetCursorPosition(0, 0);
+                Thread.Sleep(100);
             }
+           
 
             /* for (int i = 0; i < 1000; i++)
              {

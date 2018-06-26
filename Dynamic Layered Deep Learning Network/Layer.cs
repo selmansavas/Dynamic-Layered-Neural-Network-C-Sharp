@@ -41,7 +41,7 @@ namespace DynamicLayeredDeepLearningNetwork
 
                     for (int i = 0; i < layerSize; i++)
                     {
-                        Neurons[i] = new Node(network.Layers[layerIndex - 1], RandomGenerator.getRandomizer(), 0);
+                        Neurons[i] = new Node(network.Layers[layerIndex - 1], RandomGenerator.getRandomizer(), 0); //Last Argument "0" needs to be changed as ActivationFunction type.
                     }
                 }
             }
@@ -59,7 +59,6 @@ namespace DynamicLayeredDeepLearningNetwork
             {
                 for (int i = 0; i < layerSize; i++)
                 {
-                    Neurons[i].input[0] = _inputArray[i];
                     Neurons[i].output = _inputArray[i];
                 }
             }
@@ -73,11 +72,12 @@ namespace DynamicLayeredDeepLearningNetwork
                 {
                     for (int x = 0; x < _network.Layers[layerIndex - 1].layerSize; x++)
                     {
-                        Neurons[i].input[x] = _network.Layers[layerIndex - 1].Neurons[x].output;
+                        Neurons[i].input[x] = _network.Layers[layerIndex - 1].Neurons[x].output;       
                     }
+                    Neurons[i].calculateNodeOutput();
                 }
             }
-
+            
         }
 
         public void calculateLayerOutputs()
@@ -85,6 +85,22 @@ namespace DynamicLayeredDeepLearningNetwork
             foreach (Node n in Neurons)
             {
                 n.calculateNodeOutput();
+            }
+        }
+
+        public void resetNeuronsDelta()
+        {
+            foreach(Node neuron in Neurons)
+            {
+                neuron.resetDelta();
+            }
+        }
+
+        public void outputDebugPrint()
+        {
+            foreach(Node a in Neurons)
+            {
+                Console.Write(a.output + " -- ");
             }
         }
     }

@@ -31,3 +31,14 @@ C:\Users\Selman\source\repos\Dynamic Layered Deep Learning Network\Dynamic-Layer
 C:\Users\Selman\source\repos\Dynamic Layered Deep Learning Network\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\bin\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.runtimeconfig.dev.json
 C:\Users\Selman\source\repos\Dynamic Layered Deep Learning Network\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\bin\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.dll
 C:\Users\Selman\source\repos\Dynamic Layered Deep Learning Network\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\bin\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.pdb
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\bin\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.deps.json
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\bin\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.runtimeconfig.json
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\bin\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.runtimeconfig.dev.json
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\bin\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.dll
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\bin\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.pdb
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\obj\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.csprojResolveAssemblyReference.cache
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\obj\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.csproj.CoreCompileInputs.cache
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\obj\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.AssemblyInfoInputs.cache
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\obj\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.AssemblyInfo.cs
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\obj\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.dll
+C:\Users\selma\Documents\Code Projects\Dynamic-Layered-Neural-Network-C-Sharp\Dynamic Layered Deep Learning Network\obj\Debug\netcoreapp2.0\Dynamic Layered Deep Learning Network.pdb

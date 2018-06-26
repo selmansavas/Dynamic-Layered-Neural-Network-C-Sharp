@@ -13,7 +13,7 @@ namespace DynamicLayeredDeepLearningNetwork
         public double error;
         public double delta;
         public double derivativeStorage;
-        public double[] weightDelta;
+       // public double[] weightDelta;
         public double[] input;
         public double[] weight;
 
@@ -48,7 +48,8 @@ namespace DynamicLayeredDeepLearningNetwork
                     weight[i] = rand.NextDouble();
                 }
 
-                bias = rand.NextDouble();
+                //bias = rand.NextDouble();
+                bias = 0;
                 output = 0;
                 activationType = _activationType;
                 Program.NodeCounter++;
@@ -92,6 +93,11 @@ namespace DynamicLayeredDeepLearningNetwork
                         break;
                     }
             }
+        }
+
+        public void resetDelta()
+        {
+            delta = 0;
         }
 
        

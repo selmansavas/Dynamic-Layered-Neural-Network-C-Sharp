@@ -10,15 +10,15 @@ namespace DynamicLayeredDeepLearningNetwork
         public double[] expectedOutputArray;
 
 
-        public Output(EMNistDecoder _emnistDecoder)
+        public Output(int outputSize)
         {
-            networkOutputArray = new double[_emnistDecoder.numLabels];
-            expectedOutputArray = new double[_emnistDecoder.numLabels];
+            networkOutputArray = new double[outputSize];
+            expectedOutputArray = new double[outputSize];
 
             resetExpectedOutputArray();
-            resetNetworkOutputArray();
+            //resetNetworkOutputArray();
         }
-
+        /*
         public void setNetworkOutputArray(Network _network)
         {
             networkOutputArray[_network.bestNeuronIndex] = 1;
@@ -32,7 +32,7 @@ namespace DynamicLayeredDeepLearningNetwork
                 expectedOutputArray[i] = 0;
             }
         }
-
+        */
         public void setExpectedOutputArray(EMNistDecoder _emnistDecoder, int _labelNum)
         {
             expectedOutputArray[_emnistDecoder.labels[_labelNum]] = 1;
