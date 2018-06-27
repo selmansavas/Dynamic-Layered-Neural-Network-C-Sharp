@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 
 namespace DynamicLayeredDeepLearningNetwork
 {
@@ -12,7 +10,7 @@ namespace DynamicLayeredDeepLearningNetwork
 
         public Output(int outputSize)
         {
-            networkOutputArray = new double[outputSize];
+            //networkOutputArray = new double[outputSize];
             expectedOutputArray = new double[outputSize];
 
             resetExpectedOutputArray();
@@ -33,14 +31,14 @@ namespace DynamicLayeredDeepLearningNetwork
             }
         }
         */
-        public void setExpectedOutputArray(EMNistDecoder _emnistDecoder, int _labelNum)
+        public void setExpectedOutputArray(int _labelNum)
         {
-            expectedOutputArray[_emnistDecoder.labels[_labelNum]] = 1;
+            expectedOutputArray[_labelNum] = 1;
         }
 
         public void resetExpectedOutputArray()
         {
-            for (int i = 0; i < networkOutputArray.Length; i++)
+            for (int i = 0; i < expectedOutputArray.Length; i++)
             {
                 expectedOutputArray[i] = 0;
             }

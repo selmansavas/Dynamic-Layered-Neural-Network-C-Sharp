@@ -20,9 +20,22 @@ namespace DynamicLayeredDeepLearningNetwork
             {
                 for (int j = 0; j < _emnistDecoder.numCols; j++)
                 {
-                    inputArray[k] = _emnistDecoder.images[imageNumber, i, j];
+                    inputArray[k] = _emnistDecoder.images[imageNumber, i, j] == 0 ? 0 : 1;
                     k++;
                 }
+            }
+        }
+
+        public void debugPrintInput()
+        {
+            for (int i = 0; i < 784; )
+            {
+                for (int j = 0; j < 28; j++)
+                {
+                    Console.Write(inputArray[i]);
+                    i++;
+                }
+                Console.WriteLine();
             }
         }
     }

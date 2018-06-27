@@ -41,7 +41,7 @@ namespace DynamicLayeredDeepLearningNetwork
 
                     for (int i = 0; i < layerSize; i++)
                     {
-                        Neurons[i] = new Node(network.Layers[layerIndex - 1], RandomGenerator.getRandomizer(), 0); //Last Argument "0" needs to be changed as ActivationFunction type.
+                        Neurons[i] = new Node(network.Layers[layerIndex - 1], RandomGenerator.getRandomizer(), 1); //Last Argument "0" needs to be changed as ActivationFunction type.
                     }
                 }
             }
@@ -68,13 +68,14 @@ namespace DynamicLayeredDeepLearningNetwork
         {
             if (layerType != 0)
             {
+               
                 for (int i = 0; i < layerSize; i++)
                 {
                     for (int x = 0; x < _network.Layers[layerIndex - 1].layerSize; x++)
                     {
                         Neurons[i].input[x] = _network.Layers[layerIndex - 1].Neurons[x].output;       
                     }
-                    Neurons[i].calculateNodeOutput();
+                   // Neurons[i].calculateNodeOutput();
                 }
             }
             
@@ -98,9 +99,28 @@ namespace DynamicLayeredDeepLearningNetwork
 
         public void outputDebugPrint()
         {
-            foreach(Node a in Neurons)
+            Console.WriteLine(this.layerIndex + " Layer Output");
+            foreach (Node a in Neurons)
             {
-                Console.Write(a.output + " -- ");
+                Console.WriteLine(a.output + " -- ");
+            }
+        }
+
+        public void outputDeltaDebugPrint()
+        {
+            Console.WriteLine(this.layerIndex + " Layer Delta Output");
+            foreach (Node a in Neurons)
+            {
+                Console.WriteLine(a.delta + " -- ");
+            }
+        }
+
+        public void outputBiasDebugPrint()
+        {
+            Console.WriteLine(this.layerIndex + " Layer Bias Output");
+            foreach (Node a in Neurons)
+            {
+                Console.WriteLine(a.bias + " -- ");
             }
         }
     }

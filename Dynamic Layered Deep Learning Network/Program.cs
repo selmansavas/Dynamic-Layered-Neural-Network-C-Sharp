@@ -74,16 +74,16 @@ namespace DynamicLayeredDeepLearningNetwork
             int networkSizeCounter = 0; //Counts Network Size for display
             int connectionSizeCounter = 0; //Calculates Connection Size for Display
             int imageAndLabelCounter = 0;
-            int imageCount;
-            int succesfulPredictions = 0;
-            int unsuccesfulPredictions = 0;
+            float imageCount;
+            float succesfulPredictions = 0;
+            float unsuccesfulPredictions = 0;
             int[] layerAndNodeAmountHolder;
 
             string labelFilePath;
             string imagesFilePath;
 
-            labelFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-mnist-train-labels-idx1-ubyte\emnist-mnist-train-labels-idx1-ubyte";
-            imagesFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-mnist-train-images-idx3-ubyte\emnist-mnist-train-images-idx3-ubyte";
+            labelFilePath = @"C:\Users\Selman\source\repos\Dynamic Layered Deep Learning Network\Dynamic-Layered-Neural-Network-C-Sharp\emnist-mnist-train-labels-idx1-ubyte";
+            imagesFilePath = @"C:\Users\Selman\source\repos\Dynamic Layered Deep Learning Network\Dynamic-Layered-Neural-Network-C-Sharp\emnist-mnist-train-images-idx3-ubyte";
 
         /*
             Console.WriteLine("Please enter labelFilePath");
@@ -126,7 +126,7 @@ namespace DynamicLayeredDeepLearningNetwork
             outputLayerSize = Convert.ToInt32(Console.ReadLine());
 
             Variables.OutputSize = outputLayerSize;
-            Variables.LearningRate = 0.5f;
+            Variables.LearningRate = 0.05f;
             Output outputArray = new Output(Variables.OutputSize);
 
 
@@ -142,10 +142,6 @@ namespace DynamicLayeredDeepLearningNetwork
             Variables.LayerAmount = Convert.ToInt32(Console.ReadLine());
             layerAndNodeAmountHolder = new int[Variables.LayerAmount];
 
-            if (Variables.LayerAmount == 0)
-            {
-                return;
-            }
 
             //Console.WriteLine("Please enter Input Layer Size");
             //layerSize = Convert.ToInt32(Console.ReadLine());
@@ -209,33 +205,66 @@ namespace DynamicLayeredDeepLearningNetwork
 
             Console.Read();
             Console.Clear();
+            imageAndLabelCounter = 17;
 
-            while(imageAndLabelCounter < imageCount)
+            while(/*imageAndLabelCounter < imageCount*/ true)
             {
                 emnistDecoder.emnistDecoderPrint(imageAndLabelCounter);
                 inputArray.setInput(emnistDecoder,imageAndLabelCounter);
-                outputArray.setExpectedOutputArray(emnistDecoder, emnistDecoder.getCurrentImageLabel(imageAndLabelCounter));
+                //inputArray.debugPrintInput();
+                //Thread.Sleep(1000);
+                outputArray.setExpectedOutputArray(emnistDecoder.getCurrentImageLabel(imageAndLabelCounter));
                 network.setInputLayerInputs(inputArray);
                 network.feedForward();
                 Console.WriteLine("Network prediction was : " + network.getPrediction());
+                //Console.ReadLine();
                 
                 if(network.getPrediction() == emnistDecoder.getCurrentImageLabel(imageAndLabelCounter))
                 {
-                    succesfulPredictions++;                  
-                }
-                else
-                {
+                    Console.WriteLine("Succesful Prediction!");
+                    //Console.WriteLine("\n##Succesful Values##");
+                    //network.printNetworkLayerOutputDelta(2);
+                    //network.printNetworkLayerBias(2);
+                    //network.printNetworkLayerOutput(2);
+                    succesfulPredictions++;
                     unsuccesfulPredictions++;
-                    network.calculateOutputError(emnistDecoder, outputArray);
+                    network.calculateOutputError(outputArray);
                     network.startBackPropogation();
                     network.updateWeightsAndBiases();
                 }
-                Console.WriteLine("Success Rate is : %" + ((succesfulPredictions / (imageAndLabelCounter + 1)) * 100));              
-                imageAndLabelCounter++;
-                network.outputDebugPrint();
+                else
+                {
+                    Console.WriteLine("Bad Prediction :(...");
+
+                    //Console.WriteLine("##Before Values##");
+                    //network.printNetworkLayerOutputDelta(2);
+                    //network.printNetworkLayerBias(2);
+                    //network.printNetworkLayerOutput(2);
+
+                    unsuccesfulPredictions++;
+                    network.calculateOutputError(outputArray);
+                    network.startBackPropogation();
+                    network.updateWeightsAndBiases();
+
+
+                    //Console.WriteLine("\n##After Values##");
+                    //network.printNetworkLayerOutputDelta(2);
+                    //network.printNetworkLayerBias(2);
+                    //network.printNetworkLayerOutput(2);
+                }
+                Console.WriteLine("Success Rate is : %" + ((succesfulPredictions / (imageAndLabelCounter + 1)) * 100));
+                Console.WriteLine("Training Progress : " + ((imageAndLabelCounter + 1)/imageCount) * 100);
+                //imageAndLabelCounter++;
+                network.printNetworkLayerOutputDelta(2);
+                network.printNetworkLayerBias(2);
+                network.printNetworkLayerOutput(2);
                 outputArray.resetExpectedOutputArray();
+                network.resetAllDeltaValues();
                 Console.SetCursorPosition(0, 0);
-                Thread.Sleep(100);
+               
+                //Console.ReadLine();
+               // Console.Clear();
+                // Thread.Sleep(1000);
             }
            
 
