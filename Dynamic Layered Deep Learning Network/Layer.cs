@@ -115,13 +115,13 @@ namespace DynamicLayeredDeepLearningNetwork
             }
         }
 
-        public void outputBiasDebugPrint()
-        {
-            Console.WriteLine(this.layerIndex + " Layer Bias Output");
-            foreach (Node a in Neurons)
-            {
-                Console.WriteLine(a.bias + " -- ");
-            }
-        }
+        //public void outputBiasDebugPrint()
+        //{
+        //    Console.WriteLine(this.layerIndex + " Layer Bias Output");
+        //    foreach (Node a in Neurons)
+        //    {
+        //        Console.WriteLine(a.bias + " -- ");
+        //    }
+        //}
     }
 }

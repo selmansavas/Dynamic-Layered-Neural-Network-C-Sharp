@@ -82,8 +82,8 @@ namespace DynamicLayeredDeepLearningNetwork
             string labelFilePath;
             string imagesFilePath;
 
-            labelFilePath = @"C:\Users\Selman\source\repos\Dynamic Layered Deep Learning Network\Dynamic-Layered-Neural-Network-C-Sharp\emnist-mnist-train-labels-idx1-ubyte";
-            imagesFilePath = @"C:\Users\Selman\source\repos\Dynamic Layered Deep Learning Network\Dynamic-Layered-Neural-Network-C-Sharp\emnist-mnist-train-images-idx3-ubyte";
+            labelFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-mnist-train-labels-idx1-ubyte\emnist-mnist-train-labels-idx1-ubyte";
+            imagesFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-mnist-train-images-idx3-ubyte\emnist-mnist-train-images-idx3-ubyte";
 
         /*
             Console.WriteLine("Please enter labelFilePath");
@@ -126,7 +126,9 @@ namespace DynamicLayeredDeepLearningNetwork
             outputLayerSize = Convert.ToInt32(Console.ReadLine());
 
             Variables.OutputSize = outputLayerSize;
-            Variables.LearningRate = 0.05f;
+
+            Variables.LearningRate = 0.01f;
+
             Output outputArray = new Output(Variables.OutputSize);
 
 
@@ -201,22 +203,26 @@ namespace DynamicLayeredDeepLearningNetwork
             Console.WriteLine("Magic number of training set is =" + emnistDecoder.magic1);
             Console.WriteLine("Image Count in database is = " + emnistDecoder.numImages);
 
-
+            
 
             Console.Read();
             Console.Clear();
-            imageAndLabelCounter = 17;
+            imageAndLabelCounter = 0;
 
-            while(/*imageAndLabelCounter < imageCount*/ true)
+            while(imageAndLabelCounter < imageCount)
             {
-                emnistDecoder.emnistDecoderPrint(imageAndLabelCounter);
+                //emnistDecoder.emnistDecoderPrint(imageAndLabelCounter);
                 inputArray.setInput(emnistDecoder,imageAndLabelCounter);
                 //inputArray.debugPrintInput();
                 //Thread.Sleep(1000);
                 outputArray.setExpectedOutputArray(emnistDecoder.getCurrentImageLabel(imageAndLabelCounter));
                 network.setInputLayerInputs(inputArray);
-                network.feedForward();
+                network.feedForward(network);
+                //network.printNetworkLayerOutputDelta(2);
+                //network.printNetworkLayerBias(2);
+                //network.printNetworkLayerOutput(2);
                 Console.WriteLine("Network prediction was : " + network.getPrediction());
+                
                 //Console.ReadLine();
                 
                 if(network.getPrediction() == emnistDecoder.getCurrentImageLabel(imageAndLabelCounter))
@@ -226,11 +232,7 @@ namespace DynamicLayeredDeepLearningNetwork
                     //network.printNetworkLayerOutputDelta(2);
                     //network.printNetworkLayerBias(2);
                     //network.printNetworkLayerOutput(2);
-                    succesfulPredictions++;
-                    unsuccesfulPredictions++;
-                    network.calculateOutputError(outputArray);
-                    network.startBackPropogation();
-                    network.updateWeightsAndBiases();
+                    succesfulPredictions++;                
                 }
                 else
                 {
@@ -254,7 +256,7 @@ namespace DynamicLayeredDeepLearningNetwork
                 }
                 Console.WriteLine("Success Rate is : %" + ((succesfulPredictions / (imageAndLabelCounter + 1)) * 100));
                 Console.WriteLine("Training Progress : " + ((imageAndLabelCounter + 1)/imageCount) * 100);
-                //imageAndLabelCounter++;
+                imageAndLabelCounter++;
                 network.printNetworkLayerOutputDelta(2);
                 network.printNetworkLayerBias(2);
                 network.printNetworkLayerOutput(2);
@@ -262,7 +264,7 @@ namespace DynamicLayeredDeepLearningNetwork
                 network.resetAllDeltaValues();
                 Console.SetCursorPosition(0, 0);
                
-                //Console.ReadLine();
+               // Console.ReadLine();
                // Console.Clear();
                 // Thread.Sleep(1000);
             }

@@ -8,7 +8,7 @@ namespace DynamicLayeredDeepLearningNetwork
     {
         public int activationType; // 0 = Linear, 1 = Sigmoid, 2 = Tanh, 3 = Relu
 
-        public double bias;
+        //public double bias;
         public double output;
         public double error;
         public double delta;
@@ -49,12 +49,12 @@ namespace DynamicLayeredDeepLearningNetwork
                     input[i] = 0;
                 }
 
-                bias = rand.NextDouble();
+                //bias = rand.NextDouble();
                 //bias = 0;
                 output = 0;
                 activationType = _activationType;
-                delta = rand.NextDouble();
-                //delta = 0;
+                //delta = rand.NextDouble();
+                delta = 0;
                 Program.NodeCounter++;
             }
             catch (Exception e)
@@ -77,27 +77,27 @@ namespace DynamicLayeredDeepLearningNetwork
                 case 0:
                     {
                         //Console.WriteLine("Node activation type is LINEAR");
-                        output = (bias + output) / input.Length;
+                        output = (/*bias*/ + output) / input.Length;
                         break;
                     }
                 case 1:
                     {
                         //Console.WriteLine("Node activation type is SIGMOID");
-                        output = 1 / (1 + (Math.Exp((bias + output)-1)));
+                        output = 1 / (1 + (Math.Exp(-output)));
                         derivativeStorage = output * (1 - output);
                         break;
                     }
                 case 2:
                     {
                         //Console.WriteLine("Node activation type is TANH");
-                        output = Math.Tanh(bias + output);
+                        output = Math.Tanh(/*bias*/ + output);
                         derivativeStorage = 1 - (output * output);
                         break;
                     }
                 case 3:
                     {
                         //Console.WriteLine("Node activation type is RELU");
-                        output = Math.Max(0.01f, bias + output);
+                        output = Math.Max(0.01f, /*bias*/ + output);
                         derivativeStorage = output > 0.01f ? 1 : 0;
                         break;
                     }

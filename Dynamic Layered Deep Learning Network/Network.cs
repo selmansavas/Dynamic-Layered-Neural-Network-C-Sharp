@@ -44,20 +44,23 @@ namespace DynamicLayeredDeepLearningNetwork
         }
 
 
-        public void feedForward()
+        public void feedForward(Network network)
         {
+            
             for (int i = 1; i < networkSize; i++)
             {
-                Layers[i].setLayerInputs(this);
+                Layers[i].setLayerInputs(network);
                 Layers[i].calculateLayerOutputs();
             }
         }
 
         public void calculateOutputError( Output _outputArray)
         {
+            Console.Write("\n\n Output Error---\n");
             for (int i = 0; i < Layers[Layers.Count - 1].layerSize; i++)
             {
                 Layers[Layers.Count - 1].Neurons[i].error = _outputArray.expectedOutputArray[i] - Layers[Layers.Count - 1].Neurons[i].output;
+                Console.WriteLine(i + "th nodes error : " + Layers[Layers.Count - 1].Neurons[i].error);
                 //Output nodes gradient delta is calculated at calculateNodeOutput
                 Layers[Layers.Count - 1].Neurons[i].delta = Layers[Layers.Count - 1].Neurons[i].derivativeStorage * Layers[Layers.Count - 1].Neurons[i].error;
             }
@@ -72,7 +75,9 @@ namespace DynamicLayeredDeepLearningNetwork
                     for (int nodeCounterInner = 0; nodeCounterInner < Layers[layerCounter].layerSize; nodeCounterInner++)
                     {
                         Layers[layerCounter].Neurons[nodeCounterInner].delta += Layers[layerCounter].Neurons[nodeCounterInner].derivativeStorage * Layers[layerCounter + 1].Neurons[nodeCounterOuter].weight[nodeCounterInner] * Layers[layerCounter + 1].Neurons[nodeCounterOuter].delta;
+                        //Console.WriteLine(nodeCounterOuter + "th Node's delta is  : " + Layers[layerCounter].Neurons[nodeCounterInner].delta);
                     }
+                    Console.WriteLine();
                 }
             }
         }
@@ -85,11 +90,11 @@ namespace DynamicLayeredDeepLearningNetwork
             {
                 for (int nodeCounterOuter = 0; nodeCounterOuter < Layers[layerCounter].layerSize; nodeCounterOuter++)
                 {
-                    Layers[layerCounter].Neurons[nodeCounterOuter].bias = _learningRate * Layers[layerCounter].Neurons[nodeCounterOuter].delta;
+                    //Layers[layerCounter].Neurons[nodeCounterOuter].bias *= _learningRate * Layers[layerCounter].Neurons[nodeCounterOuter].delta;
                     
                     for (int nodeCounterInner = 0; nodeCounterInner < Layers[layerCounter - 1].layerSize; nodeCounterInner++)
                     {
-                        Layers[layerCounter].Neurons[nodeCounterOuter].weight[nodeCounterInner] = _learningRate * Layers[layerCounter - 1].Neurons[nodeCounterInner].output * Layers[layerCounter].Neurons[nodeCounterOuter].delta;
+                        Layers[layerCounter].Neurons[nodeCounterOuter].weight[nodeCounterInner] += _learningRate * Layers[layerCounter - 1].Neurons[nodeCounterInner].output * Layers[layerCounter].Neurons[nodeCounterOuter].delta;
                     }
                 }
             }
@@ -124,7 +129,7 @@ namespace DynamicLayeredDeepLearningNetwork
         public void printNetworkLayerBias(int layer)
         {
             Console.WriteLine();
-            Layers[layer].outputBiasDebugPrint();
+           // Layers[layer].outputBiasDebugPrint();
         }
 
         public void printNetworkLayerOutputDelta(int layer)
