@@ -127,7 +127,7 @@ namespace DynamicLayeredDeepLearningNetwork
 
             Variables.OutputSize = outputLayerSize;
 
-            Variables.LearningRate = 0.01f;
+            Variables.LearningRate = 0.05f;
 
             Output outputArray = new Output(Variables.OutputSize);
 
@@ -260,6 +260,8 @@ namespace DynamicLayeredDeepLearningNetwork
                 network.printNetworkLayerOutputDelta(2);
                 network.printNetworkLayerBias(2);
                 network.printNetworkLayerOutput(2);
+                //network.printInputDebug();
+                //Console.ReadLine();
                 outputArray.resetExpectedOutputArray();
                 network.resetAllDeltaValues();
                 Console.SetCursorPosition(0, 0);

@@ -59,6 +59,7 @@ namespace DynamicLayeredDeepLearningNetwork
             {
                 for (int i = 0; i < layerSize; i++)
                 {
+                    //Neurons[i].input[i] = _inputArray[i];
                     Neurons[i].output = _inputArray[i];
                 }
             }

@@ -56,6 +56,7 @@ namespace DynamicLayeredDeepLearningNetwork
             Program.Variables.OutputSize = numLabels;
 
             dimensions = numRows * numCols;
+            Console.WriteLine("Input Data Dimensions : " + dimensions);
 
             Program.Variables.InputSize = dimensions;
 
