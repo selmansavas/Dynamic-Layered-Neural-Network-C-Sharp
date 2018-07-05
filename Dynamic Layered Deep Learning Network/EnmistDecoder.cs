@@ -3,7 +3,7 @@ using System.IO;
 
 namespace DynamicLayeredDeepLearningNetwork
 {
-    class EMNistDecoder
+    public class EnmistDecoder
     {
         public int magic1;
         public int numImages;
@@ -24,7 +24,7 @@ namespace DynamicLayeredDeepLearningNetwork
         FileStream ifsImages;
 
 
-        public void EMNistDecoderInit(string labelFilePath, string imagesFilePath)
+        public void enmistDecoderInit(string labelFilePath, string imagesFilePath)
         {
 
             ifsLabels = new FileStream(labelFilePath, FileMode.Open); // test labels
@@ -53,11 +53,11 @@ namespace DynamicLayeredDeepLearningNetwork
             images = new byte[numImages, numRows, numCols];
             labels = new byte[numLabels];
 
-            Program.Variables.OutputSize = numLabels;
+            GlobalVariables.OutputSize = numLabels;
 
             dimensions = numRows * numCols;
 
-            Program.Variables.InputSize = dimensions;
+            GlobalVariables.InputSize = dimensions;
 
             for (int i = 0; i < numImages; i++)
             {
@@ -80,7 +80,7 @@ namespace DynamicLayeredDeepLearningNetwork
             return labels[index];
         }
 
-        public void emnistDecoderPrint(int currentIndex)
+        public void enmistDecoderPrint(int currentIndex)
         {
 
             for (int j = 0; j < numRows; j++)

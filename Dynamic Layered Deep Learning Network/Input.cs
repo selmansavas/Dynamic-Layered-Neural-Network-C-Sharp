@@ -1,26 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace DynamicLayeredDeepLearningNetwork
 {
     class Input
     {
-        public double[] inputArray;
+        public double[] input;
 
-        public Input(EMNistDecoder _emnistDecoder)
+        public Input(int inputSize)
         {
-            inputArray = new double[_emnistDecoder.dimensions];
+            input = new double[inputSize];
         }
 
-        public void setInput(EMNistDecoder _emnistDecoder, int imageNumber)
+        public void setInput(EnmistDecoder _emnistDecoder, int imageNumber)
         {
             int k = 0;
             for (int i = 0; i < _emnistDecoder.numRows; i++)
             {
                 for (int j = 0; j < _emnistDecoder.numCols; j++)
                 {
-                    inputArray[k] = _emnistDecoder.images[imageNumber, i, j] == 0 ? 0 : 1;
+                    input[k] = _emnistDecoder.images[imageNumber, i, j];
                     k++;
                 }
             }
@@ -28,11 +27,11 @@ namespace DynamicLayeredDeepLearningNetwork
 
         public void debugPrintInput()
         {
-            for (int i = 0; i < 784; )
+            for (int i = 0; i < 784;)
             {
                 for (int j = 0; j < 28; j++)
                 {
-                    Console.Write(inputArray[i]);
+                    Console.Write(input[i]);
                     i++;
                 }
                 Console.WriteLine();

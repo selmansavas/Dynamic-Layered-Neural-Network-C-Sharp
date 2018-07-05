@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DynamicLayeredDeepLearningNetwork
-
 {
     class Network
     {
         public List<Layer> Layers;
+
+        public Layer tempLayerHolder;
+
         public int networkSize;
         public int bestNeuronIndex;
 
-        public double globalError;
         public double maxOutput;
         public double[] errorArray;
 
@@ -21,85 +24,89 @@ namespace DynamicLayeredDeepLearningNetwork
             networkSize = 0;
             bestNeuronIndex = 0;
             maxOutput = 0;
+            errorArray = new double[GlobalVariables.OutputSize];
             Console.WriteLine("Network Created");
         }
 
-        public void addLayerToNetwork(int _size, int _layerType)
+        public void addLayerToNetwork(int _layerSize, int _layerType, int _layerActivationType)
         {
-            try
-            {
-                Layer tempLayerHolder = new Layer(_layerType, Layers.Count, _size, this, RandomGenerator.getRandomizer());
-                Layers.Add(tempLayerHolder);
-                networkSize++;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            tempLayerHolder = new Layer(this, networkSize, _layerSize, _layerType, _layerActivationType);
+            Layers.Add(tempLayerHolder);
+            networkSize++;
         }
 
-        public void setInputLayerInputs(Input _inputArray)
+        public void setInputLayerOutputs(Input _inputArray)
         {
-            Layers[0].setInputLayerInputs(_inputArray.inputArray);
+            Layers[0].setInputLayerOutputs(_inputArray);
         }
 
-
-        public void feedForward(Network network)
+        public void feedForward()
         {
-            
             for (int i = 1; i < networkSize; i++)
             {
-                Layers[i].setLayerInputs(network);
+                Layers[i].setLayerInputs(this);
                 Layers[i].calculateLayerOutputs();
             }
         }
 
-        public void calculateOutputError( Output _outputArray)
+
+        public void calculateOutputErrorAndGradient(Output _outputArray)
         {
-            Console.Write("\n\n Output Error---\n");
+            // Console.Write("\n\n Output Error---\n");
             for (int i = 0; i < Layers[Layers.Count - 1].layerSize; i++)
             {
-                Layers[Layers.Count - 1].Neurons[i].error = _outputArray.expectedOutputArray[i] - Layers[Layers.Count - 1].Neurons[i].output;
-                Console.WriteLine(i + "th nodes error : " + Layers[Layers.Count - 1].Neurons[i].error);
+                errorArray[i] = _outputArray.expectedOutputArray[i] - Layers[Layers.Count - 1].Neurons[i].output;
+                // Console.WriteLine(i + "th nodes error : " + errorArray[i]);
                 //Output nodes gradient delta is calculated at calculateNodeOutput
-                Layers[Layers.Count - 1].Neurons[i].delta = Layers[Layers.Count - 1].Neurons[i].derivativeStorage * Layers[Layers.Count - 1].Neurons[i].error;
+                Layers[Layers.Count - 1].Neurons[i].gradient = Layers[Layers.Count - 1].Neurons[i].derivativeStorage * errorArray[i];
             }
         }
 
-        public void startBackPropogation()
+        public void calculateHiddenLayerGradients()
         {
             for (int layerCounter = Layers.Count - 2; layerCounter > 0; layerCounter--)
             {
-                for (int nodeCounterOuter = 0; nodeCounterOuter < Layers[layerCounter + 1].layerSize; nodeCounterOuter++)
+                for (int nodeCounterInner = 0; nodeCounterInner < Layers[layerCounter].layerSize; nodeCounterInner++)
                 {
-                    for (int nodeCounterInner = 0; nodeCounterInner < Layers[layerCounter].layerSize; nodeCounterInner++)
+                    for (int nodeCounterOuter = 0; nodeCounterOuter < Layers[layerCounter + 1].layerSize; nodeCounterOuter++)
                     {
-                        Layers[layerCounter].Neurons[nodeCounterInner].delta += Layers[layerCounter].Neurons[nodeCounterInner].derivativeStorage * Layers[layerCounter + 1].Neurons[nodeCounterOuter].weight[nodeCounterInner] * Layers[layerCounter + 1].Neurons[nodeCounterOuter].delta;
-                        //Console.WriteLine(nodeCounterOuter + "th Node's delta is  : " + Layers[layerCounter].Neurons[nodeCounterInner].delta);
+                        Layers[layerCounter].Neurons[nodeCounterInner].gradientCalculationHolder += Layers[layerCounter + 1].Neurons[nodeCounterOuter].gradient * Layers[layerCounter + 1].Neurons[nodeCounterOuter].inputWeights[nodeCounterInner];
                     }
-                    Console.WriteLine();
+
+                    Layers[layerCounter].Neurons[nodeCounterInner].gradient = Layers[layerCounter].Neurons[nodeCounterInner].gradientCalculationHolder * Layers[layerCounter].Neurons[nodeCounterInner].derivativeStorage;
                 }
+
             }
+        }
+
+        public double returnErrorAverage()
+        {
+            return errorArray.Average();
         }
 
         public void updateWeightsAndBiases()
         {
-            double _learningRate = Program.Variables.LearningRate;
+            double prevDelta;
 
-            for (int layerCounter = (Layers.Count - 1); layerCounter > 0; layerCounter--)
+            for (int layerCounter = Layers.Count - 1; layerCounter > 1; layerCounter--)
             {
                 for (int nodeCounterOuter = 0; nodeCounterOuter < Layers[layerCounter].layerSize; nodeCounterOuter++)
                 {
-                    //Layers[layerCounter].Neurons[nodeCounterOuter].bias *= _learningRate * Layers[layerCounter].Neurons[nodeCounterOuter].delta;
-                    
+                    prevDelta = Layers[layerCounter].Neurons[nodeCounterOuter].biasDelta;
+                    Layers[layerCounter].Neurons[nodeCounterOuter].biasDelta = GlobalVariables.LearningRate * Layers[layerCounter].Neurons[nodeCounterOuter].gradient;
+                    Layers[layerCounter].Neurons[nodeCounterOuter].bias += Layers[layerCounter].Neurons[nodeCounterOuter].biasDelta + GlobalVariables.Momentum * prevDelta;
+
                     for (int nodeCounterInner = 0; nodeCounterInner < Layers[layerCounter - 1].layerSize; nodeCounterInner++)
                     {
-                        Layers[layerCounter].Neurons[nodeCounterOuter].weight[nodeCounterInner] += _learningRate * Layers[layerCounter - 1].Neurons[nodeCounterInner].output * Layers[layerCounter].Neurons[nodeCounterOuter].delta;
+                        prevDelta = Layers[layerCounter].Neurons[nodeCounterOuter].weightDelta;
+                        Layers[layerCounter].Neurons[nodeCounterOuter].weightDelta = GlobalVariables.LearningRate * Layers[layerCounter].Neurons[nodeCounterOuter].gradient * Layers[layerCounter - 1].Neurons[nodeCounterInner].output;
+                        //Console.WriteLine("Shift Amount = " + (Layers[layerCounter].Neurons[nodeCounterOuter].weightDelta + GlobalVariables.Momentum * prevDelta));
+                        Layers[layerCounter].Neurons[nodeCounterOuter].inputWeights[nodeCounterInner] += Layers[layerCounter].Neurons[nodeCounterOuter].weightDelta + GlobalVariables.Momentum * prevDelta;
                     }
+
+
                 }
             }
-
-            
         }
 
         public int getPrediction()
@@ -129,23 +136,24 @@ namespace DynamicLayeredDeepLearningNetwork
         public void printNetworkLayerBias(int layer)
         {
             Console.WriteLine();
-           // Layers[layer].outputBiasDebugPrint();
+            Layers[layer].outputBiasDebugPrint();
         }
 
         public void printNetworkLayerOutputDelta(int layer)
         {
 
             Console.WriteLine();
-            Layers[layer].outputDeltaDebugPrint();
+            Layers[layer].outputGradientDebugPrint();
         }
 
-        public void resetAllDeltaValues()
+        public void resetAllNeuronsGradientCalculationHolderValues()
         {
             foreach (Layer layer in Layers)
             {
-                layer.resetNeuronsDelta();
+                layer.resetNeuronsGradientCalculationHolder();
             }
         }
+
 
     }
 }
