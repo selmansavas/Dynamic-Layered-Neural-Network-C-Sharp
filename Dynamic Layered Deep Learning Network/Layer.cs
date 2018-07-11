@@ -1,27 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace DynamicLayeredDeepLearningNetwork
 {
     class Layer
     {
         public Neuron[] Neurons;
+        public Network network;
 
         public int layerSize;
         public int layerType;
         public int layerActivationType;
         public int layerIndex;
+        public int arrayI;
+        public int arrayX;
+        public int maxThreads = 0;
+        public int availableThreads = 0;
+        public int placeHolder = 0;
 
-        public Layer(Network network, int _layerIndex, int _layerSize, int _layerType, int _layerActivationType)
+        public Layer(Network _network, int _layerIndex, int _layerSize, int _layerType, int _layerActivationType)
         {
             layerType = _layerType;
             layerSize = _layerSize;
             layerIndex = _layerIndex;
             layerActivationType = _layerActivationType;
-
+            network = _network;
             Neurons = new Neuron[layerSize];
 
             if (layerType == 0)
@@ -56,19 +59,31 @@ namespace DynamicLayeredDeepLearningNetwork
 
         public void setLayerInputs(Network _network)
         {
+            //ThreadPool.GetMaxThreads(out maxThreads, out placeHolder);
             if (layerType != 0)
             {
-
-                for (int i = 0; i < layerSize; i++)
+                for (arrayI = 0; arrayI < layerSize; arrayI++)
                 {
-                    for (int x = 0; x < _network.Layers[layerIndex - 1].layerSize; x++)
+                    for (arrayX = 0; arrayX < _network.Layers[layerIndex - 1].layerSize; arrayX++)
                     {
-                        Neurons[i].input[x] = _network.Layers[layerIndex - 1].Neurons[x].output;
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(setNeuronInput), null);
+                        //Neurons[i].input[x] = _network.Layers[layerIndex - 1].Neurons[x].output;
                     }
 
                 }
             }
+           // ThreadPool.GetAvailableThreads(out availableThreads, out placeHolder);
+            //while (availableThreads != maxThreads)
+            //{
+            //    ThreadPool.GetAvailableThreads(out availableThreads, out placeHolder);
+            //}
+            return;
 
+        }
+
+        public void setNeuronInput(object o)
+        {
+            Neurons[arrayI].input[arrayX] = network.Layers[layerIndex - 1].Neurons[arrayX].output;
         }
 
         public void calculateLayerOutputs()
