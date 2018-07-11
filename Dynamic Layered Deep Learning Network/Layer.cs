@@ -12,8 +12,8 @@ namespace DynamicLayeredDeepLearningNetwork
         public int layerType;
         public int layerActivationType;
         public int layerIndex;
-        public int arrayI;
-        public int arrayX;
+        public int arrayI = 0;
+        public int arrayX = 0;
         public int maxThreads = 0;
         public int availableThreads = 0;
         public int placeHolder = 0;
@@ -62,9 +62,9 @@ namespace DynamicLayeredDeepLearningNetwork
             //ThreadPool.GetMaxThreads(out maxThreads, out placeHolder);
             if (layerType != 0)
             {
-                for (arrayI = 0; arrayI < layerSize; arrayI++)
+                for (arrayI = 0; arrayI < layerSize -1 ; arrayI++)
                 {
-                    for (arrayX = 0; arrayX < _network.Layers[layerIndex - 1].layerSize; arrayX++)
+                    for (arrayX = 0; arrayX < network.Layers[layerIndex - 1].layerSize - 1; arrayX++)
                     {
                         ThreadPool.QueueUserWorkItem(new WaitCallback(setNeuronInput), null);
                         //Neurons[i].input[x] = _network.Layers[layerIndex - 1].Neurons[x].output;
@@ -83,7 +83,17 @@ namespace DynamicLayeredDeepLearningNetwork
 
         public void setNeuronInput(object o)
         {
-            Neurons[arrayI].input[arrayX] = network.Layers[layerIndex - 1].Neurons[arrayX].output;
+            try
+            {
+                Neurons[arrayI].input[arrayX] = network.Layers[layerIndex - 1].Neurons[arrayX].output;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("ArrayI is : " + arrayI);
+                Console.WriteLine("ArrayX is : " + arrayX);
+                Console.ReadLine();
+            }
         }
 
         public void calculateLayerOutputs()
