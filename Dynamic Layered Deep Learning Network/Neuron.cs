@@ -99,7 +99,7 @@ namespace DynamicLayeredDeepLearningNetwork
                     {
                         //Console.WriteLine("Node activation type is RELU");
                         output = Math.Max(0, output);
-                        derivativeStorage = output > 0 ? .001f * output : 1;
+                        derivativeStorage = output > 0 ? 1 : 0;
                         break;
                     }
             }

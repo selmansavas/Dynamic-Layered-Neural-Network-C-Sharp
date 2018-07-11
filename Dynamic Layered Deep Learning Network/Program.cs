@@ -26,14 +26,16 @@ namespace DynamicLayeredDeepLearningNetwork
             float imageCount;
             float succesfulPredictions = 0;
             float unsuccesfulPredictions = 0;
+            float successCurrentHolder = 0;
+
 
             int[] layerAndNodeAmountHolder;
 
             string labelFilePath;
             string imagesFilePath;
 
-            labelFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-digits-train-labels-idx1-ubyte\emnist-digits-train-labels-idx1-ubyte";
-            imagesFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-digits-train-images-idx3-ubyte\emnist-digits-train-images-idx3-ubyte";
+            labelFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-mnist-train-labels-idx1-ubyte\emnist-mnist-train-labels-idx1-ubyte";
+            imagesFilePath = @"C:\EMNist Dataset\gzip\gzip\emnist-mnist-train-images-idx3-ubyte\emnist-mnist-train-images-idx3-ubyte";
 
             /*
                 Console.WriteLine("Please enter labelFilePath");
@@ -78,7 +80,7 @@ namespace DynamicLayeredDeepLearningNetwork
             GlobalVariables.OutputSize = outputLayerSize;
             GlobalVariables.InputSize = enmistDecoder.dimensions;
 
-            GlobalVariables.LearningRate = 0.9f;
+            GlobalVariables.LearningRate = 0.001f;
             GlobalVariables.Momentum = 0f;
 
             Output outputArray = new Output(GlobalVariables.OutputSize);
@@ -129,7 +131,7 @@ namespace DynamicLayeredDeepLearningNetwork
                 network.addLayerToNetwork(layerAndNodeAmountHolder[i], 1, layerActivationType);
             }
 
-            network.addLayerToNetwork(GlobalVariables.OutputSize, 2, layerActivationType);
+            network.addLayerToNetwork(GlobalVariables.OutputSize, 2, 0);
 
             networkOutputLayerIndex = network.Layers.Count - 1;
 
@@ -159,6 +161,7 @@ namespace DynamicLayeredDeepLearningNetwork
             Console.Read();
             Console.Clear();
 
+            stopwatch.Start();
             while (true)
             {
                 imageAndLabelCounter = 0;
@@ -181,11 +184,11 @@ namespace DynamicLayeredDeepLearningNetwork
 
 
                     //Console.ReadLine();
-                    if (network.getPrediction() > 62)
-                    {
-                        Console.WriteLine("OUTPUT ERROR");
-                        Console.ReadLine();
-                    }
+                    //if (network.getPrediction() > 62)
+                    //{
+                    //    Console.WriteLine("OUTPUT ERROR");
+                    //    Console.ReadLine();
+                    //}
 
                     if (network.getPrediction() == enmistDecoder.getCurrentImageLabel(imageAndLabelCounter))
                     {
@@ -205,22 +208,24 @@ namespace DynamicLayeredDeepLearningNetwork
 
                         unsuccesfulPredictions++;
                         globalUnsuccessCounter++;
-
+                        network.calculateOutputErrorAndGradient(outputArray);
+                        globalError = network.returnErrorAverage();
+                        network.calculateHiddenLayerGradients();
+                        network.updateWeightsAndBiases();
 
 
                     }
-                    network.calculateOutputErrorAndGradient(outputArray);
-                    globalError = network.returnErrorAverage();
-                    network.calculateHiddenLayerGradients();
-                    network.updateWeightsAndBiases();
-                    Console.WriteLine("Success Rate is : %" + ((succesfulPredictions / (imageAndLabelCounter + 1)) * 100));
+                    successCurrentHolder = (succesfulPredictions / (imageAndLabelCounter + 1) * 100);
+
+                    Console.WriteLine("Success Rate is : %" + successCurrentHolder);
                     Console.WriteLine("Training Progress : " + ((imageAndLabelCounter + 1) / imageCount) * 100);
                     Console.WriteLine("Error is : " + globalError);
+                    Console.WriteLine("Time Passed : " + stopwatch.Elapsed);
                     imageAndLabelCounter++;
                     totalIterationsCounter++;
-                    //network.printNetworkLayerOutputDelta(networkOutputLayerIndex);
-                    //network.printNetworkLayerBias(networkOutputLayerIndex);
-                    //network.printNetworkLayerOutput(networkOutputLayerIndex);
+                    //network.printNetworkLayerOutputDelta(1);
+                    //network.printNetworkLayerBias(1);
+                    //network.printNetworkLayerOutput(1);
                     Console.WriteLine("Global Success Counter = " + globalSuccessCounter);
                     Console.WriteLine("Global Fail Counter = " + globalUnsuccessCounter);
                     outputArray.resetExpectedOutputArray();
@@ -229,18 +234,6 @@ namespace DynamicLayeredDeepLearningNetwork
 
                     //Console.ReadLine();
 
-                    //while (true)
-                    //{
-                    //    if (Console.Read() == 1)
-                    //    {
-                    //        Thread.Sleep(1);
-                    //    }
-                    //    else
-                    //    {
-                    //        break;
-                    //    }
-                    //}
-                    //Console.Clear();
                     Console.SetCursorPosition(0, 0);
                     // Thread.Sleep(1000);
                 }

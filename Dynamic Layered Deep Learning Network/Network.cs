@@ -64,7 +64,7 @@ namespace DynamicLayeredDeepLearningNetwork
 
         public void calculateHiddenLayerGradients()
         {
-            for (int layerCounter = Layers.Count - 2; layerCounter > 0; layerCounter--)
+            for (int layerCounter = Layers.Count - 2; layerCounter >= 0; layerCounter--)
             {
                 for (int nodeCounterInner = 0; nodeCounterInner < Layers[layerCounter].layerSize; nodeCounterInner++)
                 {
