@@ -80,7 +80,7 @@ namespace DynamicLayeredDeepLearningNetwork
             GlobalVariables.OutputSize = outputLayerSize;
             GlobalVariables.InputSize = enmistDecoder.dimensions;
 
-            GlobalVariables.LearningRate = 0.5f;
+            GlobalVariables.LearningRate = 0.1f;
             GlobalVariables.Momentum = 0f;
 
             Output outputArray = new Output(GlobalVariables.OutputSize);
@@ -237,6 +237,7 @@ namespace DynamicLayeredDeepLearningNetwork
                     Console.SetCursorPosition(0, 0);
                     // Thread.Sleep(1000);
                 }
+                break;
             }
 
             Console.WriteLine("Entering Test Phase");
