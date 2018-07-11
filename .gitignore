@@ -1,0 +1,5 @@
+
+*.ide-shm
+*.ide-wal
+.vs/Dynamic Layered Deep Learning Network/v15/Server/sqlite3/storage.ide-shm
+.vs/Dynamic Layered Deep Learning Network/v15/Server/sqlite3/storage.ide-wal
