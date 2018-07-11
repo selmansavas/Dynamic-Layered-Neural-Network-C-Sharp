@@ -59,6 +59,7 @@ namespace DynamicLayeredDeepLearningNetwork
 
         public void setLayerInputs(Network _network)
         {
+            ThreadPool.SetMaxThreads(8, 0);
             //ThreadPool.GetMaxThreads(out maxThreads, out placeHolder);
             if (layerType != 0)
             {
@@ -72,12 +73,12 @@ namespace DynamicLayeredDeepLearningNetwork
 
                 }
             }
-           // ThreadPool.GetAvailableThreads(out availableThreads, out placeHolder);
+            //ThreadPool.GetAvailableThreads(out availableThreads, out placeHolder);
             //while (availableThreads != maxThreads)
             //{
             //    ThreadPool.GetAvailableThreads(out availableThreads, out placeHolder);
             //}
-            return;
+            //return;
 
         }
 
@@ -85,6 +86,7 @@ namespace DynamicLayeredDeepLearningNetwork
         {
             try
             {
+                //Console.WriteLine("Thread is working");
                 Neurons[arrayI].input[arrayX] = network.Layers[layerIndex - 1].Neurons[arrayX].output;
             }
             catch(Exception e)
