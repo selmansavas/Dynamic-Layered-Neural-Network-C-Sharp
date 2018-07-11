@@ -8,7 +8,6 @@ namespace DynamicLayeredDeepLearningNetwork
     {
         public Neuron[] Neurons;
         public Network network;
-
         public int layerSize;
         public int layerType;
         public int layerActivationType;
@@ -58,7 +57,7 @@ namespace DynamicLayeredDeepLearningNetwork
             }
         }
 
-        public void setLayerInputs(Network _network)
+        async public void setLayerInputs(Network _network)
         {
             AutoResetEvent autoReset = new AutoResetEvent(false);
            // ThreadPool.SetMaxThreads(16, 0);
@@ -67,7 +66,7 @@ namespace DynamicLayeredDeepLearningNetwork
             {
                 for (arrayI = 0; arrayI < layerSize -1 ; arrayI++)
                 {
-                    Parallel.For(arrayX, (network.Layers[layerIndex - 1].layerSize -1), setNeuronInput);
+                    Parallel.For(arrayX, (network.Layers[layerIndex - 1].layerSize), setNeuronInput);
                     arrayX = 0;
                     //for (arrayX = 0; ; arrayX++)
                     //{
