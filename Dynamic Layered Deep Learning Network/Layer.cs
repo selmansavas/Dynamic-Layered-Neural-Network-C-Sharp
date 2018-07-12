@@ -57,9 +57,9 @@ namespace DynamicLayeredDeepLearningNetwork
             }
         }
 
-        async public void setLayerInputs(Network _network)
+        public void setLayerInputs()
         {
-            AutoResetEvent autoReset = new AutoResetEvent(false);
+            //AutoResetEvent autoReset = new AutoResetEvent(false);
             ThreadPool.SetMaxThreads(13, 0);
             //ThreadPool.GetMaxThreads(out maxThreads, out placeHolder);
             if (layerType != 0)
