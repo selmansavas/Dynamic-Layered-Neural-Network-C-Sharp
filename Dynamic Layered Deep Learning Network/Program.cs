@@ -169,6 +169,7 @@ namespace DynamicLayeredDeepLearningNetwork
                 unsuccesfulPredictions = 0;
                 while (imageAndLabelCounter < imageCount)
                 {
+                    
                     //EnmistDecoder.EnmistDecoderPrint(imageAndLabelCounter);
                     inputArray.setInput(enmistDecoder, imageAndLabelCounter);
                     //inputArray.debugPrintInput();
@@ -216,7 +217,8 @@ namespace DynamicLayeredDeepLearningNetwork
 
                     }
                     successCurrentHolder = (succesfulPredictions / (imageAndLabelCounter + 1) * 100);
-
+                    GlobalVariables.LearningRate = 1f / successCurrentHolder;
+                    Console.WriteLine("Learning Rate is : " + GlobalVariables.LearningRate);
                     Console.WriteLine("Success Rate is : %" + successCurrentHolder);
                     Console.WriteLine("Training Progress : " + ((imageAndLabelCounter + 1) / imageCount) * 100);
                     Console.WriteLine("Error is : " + globalError);

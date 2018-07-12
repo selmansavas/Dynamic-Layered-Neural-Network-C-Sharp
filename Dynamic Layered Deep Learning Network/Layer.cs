@@ -6,14 +6,14 @@ namespace DynamicLayeredDeepLearningNetwork
 {
     class Layer
     {
-        public Neuron[] Neurons;
+        public volatile Neuron[] Neurons;
         public Network network;
         public int layerSize;
         public int layerType;
         public int layerActivationType;
         public int layerIndex;
-        public int arrayI = 0;
-        public int arrayX = 0;
+        public volatile int arrayI = 0;
+        public volatile int arrayX = 0;
         public int maxThreads = 0;
         public int availableThreads = 0;
         public int placeHolder = 0;
@@ -60,12 +60,13 @@ namespace DynamicLayeredDeepLearningNetwork
         async public void setLayerInputs(Network _network)
         {
             AutoResetEvent autoReset = new AutoResetEvent(false);
-           // ThreadPool.SetMaxThreads(16, 0);
+            ThreadPool.SetMaxThreads(13, 0);
             //ThreadPool.GetMaxThreads(out maxThreads, out placeHolder);
             if (layerType != 0)
             {
                 for (arrayI = 0; arrayI < layerSize -1 ; arrayI++)
                 {
+                    
                     Parallel.For(arrayX, (network.Layers[layerIndex - 1].layerSize), setNeuronInput);
                     arrayX = 0;
                     //for (arrayX = 0; ; arrayX++)
@@ -92,7 +93,7 @@ namespace DynamicLayeredDeepLearningNetwork
             try
             {
                 //Console.WriteLine("Thread is working");
-                Neurons[arrayI].input[arrayX] = network.Layers[layerIndex - 1].Neurons[arrayX].output;
+                Neurons[arrayI].input[i] = network.Layers[layerIndex - 1].Neurons[i].output;
                 arrayX++;
                 //Console.WriteLine(arrayX);
             }
